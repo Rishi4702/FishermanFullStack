@@ -1,0 +1,308 @@
+swagger: "2.0"
+info:
+  description: "API for managing fishermen"
+  version: "1.0.0"
+  title: "Fisherman API"
+basePath: "/fishermansHelp"
+schemes:
+  - "https"
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+paths:
+  /fishermen:
+    post:
+      tags:
+        - "Fisherman Management"
+      summary: "Add new fisherman profile"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Fisherman object that needs to be added to the system"
+          required: true
+          schema:
+            $ref: "#/definitions/Fisherman"
+      responses:
+        "201":
+          description: "Fisherman created"
+        "400":
+          description: "Invalid input"
+    get:
+      tags:
+        - "Fisherman Management"
+      summary: "Search fisherman profile"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "name"
+          in: "query"
+          description: "Name of the fisherman to search for"
+          required: false
+          type: "string"
+        - name: "location"
+          in: "query"
+          description: "ID of the location where the fisherman fishes"
+          required: false
+          type: "string"
+      responses:
+        "200":
+          description: "Search results matching the query"
+        "400":
+          description: "Invalid input"
+  /fishermen/{id}:
+    put:
+      tags:
+        - "Fisherman Management"
+      summary: "Edit fisherman profile"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "id"
+          description: "ID of the fisherman to edit"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          description: "Fisherman object that needs to be updated"
+          required: true
+          schema:
+            $ref: "#/definitions/Fisherman"
+      responses:
+        "200":
+          description: "Fisherman updated"
+        "400":
+          description: "Invalid input"
+        "404":
+          description: "Fisherman not found"
+    delete:
+      tags:
+        - "Fisherman Management"
+      summary: "Delete fisherman profile"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "id"
+          description: "ID of the fisherman to delete"
+          required: true
+          type: "string"
+      responses:
+        "204":
+          description: "Fisherman deleted"
+        "404":
+          description: "Fisherman not found"
+          
+  /locations:
+    post:
+      tags:
+        - "Location Management"
+      summary: "Add new fishing location"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Location object that needs to be added to the system"
+          required: true
+          schema:
+            $ref: "#/definitions/Location"
+      responses:
+        "201":
+          description: "Location created"
+        "400":
+          description: "Invalid input"
+    get:
+      tags:
+        - "Location Management"
+      summary: "Search fishing locations"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "name"
+          in: "query"
+          description: "Name of the fishing location to search for"
+          required: false
+          type: "string"
+        - name: "latitude"
+          in: "query"
+          description: "Latitude of the fishing location to search for"
+          required: false
+          type: "number"
+          format: "double"
+        - name: "longitude"
+          in: "query"
+          description: "Longitude of the fishing location to search for"
+          required: false
+          type: "number"
+          format: "double"
+      responses:
+        "200":
+          description: "Search results matching the query"
+        "400":
+          description: "Invalid input"
+  /locations/{id}:
+    put:
+      tags:
+        - "Location Management"
+      summary: "Edit fishing location"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "id"
+          description: "ID of the fishing location to edit"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          description: "Location object that needs to be updated"
+          required: true
+          schema:
+            $ref: "#/definitions/Location"
+      responses:
+        "200":
+          description: "Location updated"
+        "400":
+          description: "Invalid input"
+        "404":
+          description: "Location not found"
+    delete:
+      tags:
+        - "Location Management"
+      summary: "Delete fishing location"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "id"
+          description: "ID of the fishing location to delete"
+          required: true
+          type: "string"
+      responses:
+        "204":
+          description: "Location deleted"
+        "404":
+          description: "Location not found"   
+  /catches:
+    get:
+      tags:
+        - "Catch Management"
+      summary: "Get all catches"
+      description: "Returns a list of all catches with location information."
+      responses:
+        200:
+          description: "A list of catches with location information"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/CatchWithLocation"
+        500:
+          description: "Internal server error"
+    post:
+      tags:
+        - "Catch Management"
+      summary: "Submit a catch"
+      description: "Allows a fisherman to submit what they caught"
+      parameters:
+        - name: "species"
+          in: "query"
+          description: "The species of the fish caught"
+          required: true
+          type: "string"
+        - name: "length"
+          in: "query"
+          description: "The length of the fish in inches"
+          required: true
+          type: "number"
+        - name: "weight"
+          in: "query"
+          description: "The weight of the fish in pounds"
+          required: true
+          type: "number"
+        - name: "latitude"
+          in: "query"
+          description: "The latitude of the location where the fish was caught"
+          required: true
+          type: "number"
+        - name: "longitude"
+          in: "query"
+          description: "The longitude of the location where the fish was caught"
+          required: true
+          type: "number"
+      responses:
+        200:
+          description: "Catch submitted successfully"
+        400:
+          description: "Invalid input parameters"
+        500:
+          description: "Internal server error"
+definitions:
+  Fisherman:
+    type: "object"
+    required:
+      - "name"
+      - "age"
+      - "email"
+      - "phone"
+    properties:
+      name:
+        type: "string"
+      age:
+        type: "integer"
+        format: "int32"
+        minimum: 18
+        maximum: 99
+      email:
+        type: "string"
+        format: "email"
+      phone:
+        type: "string"
+      location:
+        type: "string" 
+  Location:
+    type: "object"
+    required:
+      - "name"
+      - "latitude"
+      - "longitude"
+      - "description"
+    properties:
+      name:
+        type: "string"
+      latitude:
+        type: "number"
+        format: "double"
+      longitude:
+        type: "number"
+        format: "double"
+      description:
+        type: "string"  
+        
+  CatchWithLocation:
+    type: "object"
+    properties:
+      species:
+        type: "string"
+      length:
+        type: "number"
+      weight:
+        type: "number"
+      location:
+        type: "object"
+        properties:
+          latitude:
+            type: "number"
+          longitude:
+            type: "number"     
